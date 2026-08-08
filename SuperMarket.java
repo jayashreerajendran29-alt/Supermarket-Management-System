@@ -1,17 +1,19 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// =====================================================
+// ==========================================================
 // PRODUCT CLASS
-// OOPS: CLASS + ENCAPSULATION
-// =====================================================
+// OOPS CONCEPT: CLASS, ENCAPSULATION, CONSTRUCTOR
+// ==========================================================
 class Product {
 
+    // OOPS CONCEPT: ENCAPSULATION
     private int productId;
     private String productName;
     private double price;
     private int stock;
 
+    // OOPS CONCEPT: CONSTRUCTOR
     Product(int productId, String productName, double price, int stock) {
         this.productId = productId;
         this.productName = productName;
@@ -19,6 +21,7 @@ class Product {
         this.stock = stock;
     }
 
+    // OOPS CONCEPT: GETTER METHODS
     public int getProductId() {
         return productId;
     }
@@ -35,30 +38,30 @@ class Product {
         return stock;
     }
 
+    // OOPS CONCEPT: SETTER METHOD
     public void setStock(int stock) {
         this.stock = stock;
     }
 
     public void displayProduct() {
-        System.out.printf(
-            "%-8d %-20s %-10.2f %-8d%n",
-            productId, productName, price, stock
-        );
+        System.out.printf("%-10d %-25s %-10.2f %-10d%n",
+                productId, productName, price, stock);
     }
 }
 
 
-// =====================================================
-// PRODUCT MANAGEMENT CLASS
-// OOPS: AGGREGATION
-// =====================================================
+// ==========================================================
+// PRODUCT MANAGEMENT
+// ==========================================================
 class ProductManagement {
 
+    // OOPS CONCEPT: AGGREGATION
+    // ArrayList stores Product objects
     ArrayList<Product> products = new ArrayList<>();
 
+    // Add sample products
     public void loadProducts() {
-
-        products.add(new Product(101, "Milk", 50.0, 50));
+products.add(new Product(101, "Milk", 50.0, 50));
 products.add(new Product(102, "Curd", 40.0, 40));
 products.add(new Product(103, "Butter", 60.0, 30));
 products.add(new Product(104, "Cheese", 120.0, 25));
@@ -183,29 +186,23 @@ products.add(new Product(217, "Sketch Pens", 100.0, 40));
 products.add(new Product(218, "Drawing Book", 90.0, 50));
 products.add(new Product(219, "Water Bottle", 150.0, 45));
 products.add(new Product(220, "Lunch Box", 250.0, 30));
-    
+
     }
 
+    // Display products
     public void displayProducts() {
 
-        System.out.println("\n================================================");
-        System.out.println("                PRODUCT LIST");
-        System.out.println("================================================");
-
-        System.out.printf(
-            "%-8s %-20s %-10s %-8s%n",
-            "ID", "Product Name", "Price", "Stock"
-        );
-
-        System.out.println("------------------------------------------------");
+        System.out.println("\n================ PRODUCT LIST ================");
+        System.out.printf("%-10s %-25s %-10s %-10s%n",
+                "ID", "Product Name", "Price", "Stock");
+        System.out.println("-----------------------------------------------");
 
         for (Product p : products) {
             p.displayProduct();
         }
-
-        System.out.println("================================================");
     }
 
+    // Search product
     public Product searchProduct(int id) {
 
         for (Product p : products) {
@@ -218,6 +215,7 @@ products.add(new Product(220, "Lunch Box", 250.0, 30));
         return null;
     }
 
+    // Add new product
     public void addProduct(Scanner sc) {
 
         System.out.print("Enter Product ID: ");
@@ -234,27 +232,25 @@ products.add(new Product(220, "Lunch Box", 250.0, 30));
         System.out.print("Enter Stock: ");
         int stock = sc.nextInt();
 
-        Product product =
-            new Product(id, name, price, stock);
-
-        products.add(product);
+        products.add(new Product(id, name, price, stock));
 
         System.out.println("Product added successfully!");
     }
 
+    // Update stock
     public void updateStock(Scanner sc) {
 
         System.out.print("Enter Product ID: ");
         int id = sc.nextInt();
 
-        Product product = searchProduct(id);
+        Product p = searchProduct(id);
 
-        if (product != null) {
+        if (p != null) {
 
-            System.out.print("Enter new stock: ");
+            System.out.print("Enter New Stock: ");
             int stock = sc.nextInt();
 
-            product.setStock(stock);
+            p.setStock(stock);
 
             System.out.println("Stock updated successfully!");
 
@@ -266,10 +262,10 @@ products.add(new Product(220, "Lunch Box", 250.0, 30));
 }
 
 
-// =====================================================
+// ==========================================================
 // ORDER ITEM CLASS
-// OOPS: CLASS + ENCAPSULATION
-// =====================================================
+// OOPS CONCEPT: CLASS AND ENCAPSULATION
+// ==========================================================
 class OrderItem {
 
     private Product product;
@@ -294,10 +290,9 @@ class OrderItem {
 }
 
 
-// =====================================================
-// ORDER MANAGEMENT CLASS
-// OOPS: AGGREGATION
-// =====================================================
+// ==========================================================
+// ORDER MANAGEMENT
+// ==========================================================
 class OrderManagement {
 
     ArrayList<OrderItem> orderItems = new ArrayList<>();
@@ -308,16 +303,15 @@ class OrderManagement {
         this.productManagement = productManagement;
     }
 
+    // Create order
     public void createOrder(Scanner sc) {
 
         System.out.print("Enter Product ID: ");
         int id = sc.nextInt();
 
-        Product product =
-            productManagement.searchProduct(id);
+        Product product = productManagement.searchProduct(id);
 
         if (product == null) {
-
             System.out.println("Product not found!");
             return;
         }
@@ -326,64 +320,45 @@ class OrderManagement {
         int quantity = sc.nextInt();
 
         if (quantity <= 0) {
-
             System.out.println("Invalid quantity!");
             return;
         }
 
         if (quantity > product.getStock()) {
-
             System.out.println("Insufficient stock!");
             return;
         }
 
-        OrderItem item =
-            new OrderItem(product, quantity);
+        orderItems.add(new OrderItem(product, quantity));
 
-        orderItems.add(item);
+        product.setStock(product.getStock() - quantity);
 
-        product.setStock(
-            product.getStock() - quantity
-        );
-
-        System.out.println(
-            "Product added to order successfully!"
-        );
+        System.out.println("Product added to order successfully!");
     }
 
+    // Display order
     public void displayOrder() {
 
-        if (orderItems.isEmpty()) {
-
-            System.out.println(
-                "No items in the order."
-            );
+        if (orderItems.size() == 0) {
+            System.out.println("No items in the order.");
             return;
         }
 
-        System.out.println("\n================================================");
-        System.out.println("                 ORDER DETAILS");
-        System.out.println("================================================");
+        System.out.println("\n================ ORDER DETAILS ================");
 
-        System.out.printf(
-            "%-8s %-20s %-10s %-10s%n",
-            "ID", "Product", "Quantity", "Amount"
-        );
+        System.out.printf("%-10s %-20s %-10s %-10s%n",
+                "ID", "Product", "Quantity", "Amount");
 
-        System.out.println("------------------------------------------------");
+        System.out.println("-----------------------------------------------");
 
         for (OrderItem item : orderItems) {
 
-            System.out.printf(
-                "%-8d %-20s %-10d %-10.2f%n",
-                item.getProduct().getProductId(),
-                item.getProduct().getProductName(),
-                item.getQuantity(),
-                item.getAmount()
-            );
+            System.out.printf("%-10d %-20s %-10d %-10.2f%n",
+                    item.getProduct().getProductId(),
+                    item.getProduct().getProductName(),
+                    item.getQuantity(),
+                    item.getAmount());
         }
-
-        System.out.println("================================================");
     }
 
     public double calculateTotal() {
@@ -391,8 +366,7 @@ class OrderManagement {
         double total = 0;
 
         for (OrderItem item : orderItems) {
-
-            total = total + item.getAmount();
+            total += item.getAmount();
         }
 
         return total;
@@ -400,131 +374,53 @@ class OrderManagement {
 }
 
 
-// =====================================================
-// BILL CLASS
-// OOPS: ENCAPSULATION
-// =====================================================
-class Bill {
+// ==========================================================
+// BILLING MANAGEMENT
+// ==========================================================
+class BillingManagement {
 
-    private int billNumber;
-    private double subtotal;
-    private double tax;
-    private double discount;
-    private double grandTotal;
+    // OOPS CONCEPT: METHOD
+    public double calculateTax(double amount) {
 
-    Bill(int billNumber, double subtotal,
-         double tax, double discount) {
+        double tax = amount * 0.05;
 
-        this.billNumber = billNumber;
-        this.subtotal = subtotal;
-        this.tax = tax;
-        this.discount = discount;
-
-        this.grandTotal =
-            subtotal + tax - discount;
-    }
-
-    public int getBillNumber() {
-        return billNumber;
-    }
-
-    public double getSubtotal() {
-        return subtotal;
-    }
-
-    public double getTax() {
         return tax;
     }
 
-    public double getDiscount() {
-        return discount;
-    }
+    public void generateBill(OrderManagement order) {
 
-    public double getGrandTotal() {
-        return grandTotal;
-    }
-}
+        double subtotal = order.calculateTotal();
 
-
-// =====================================================
-// BILLING MANAGEMENT CLASS
-// OOPS: CLASS + AGGREGATION
-// =====================================================
-class BillingManagement {
-
-    private int billCounter = 1001;
-
-    public Bill generateBill(OrderManagement orderManagement) {
-
-        double subtotal =
-            orderManagement.calculateTotal();
-
-        // 5% GST
-        double tax = subtotal * 0.05;
-
-        // Discount
-        double discount = 0;
-
-        if (subtotal >= 1000) {
-            discount = subtotal * 0.10;
+        if (subtotal == 0) {
+            System.out.println("No items to generate bill.");
+            return;
         }
 
-        Bill bill =
-            new Bill(
-                billCounter,
-                subtotal,
-                tax,
-                discount
-            );
+        double tax = calculateTax(subtotal);
 
-        billCounter++;
+        double total = subtotal + tax;
 
-        return bill;
-    }
+        System.out.println("\n==============================================");
+        System.out.println("             SUPERMARKET BILL");
+        System.out.println("==============================================");
 
-    public void displayBill(Bill bill) {
+        order.displayOrder();
 
-        System.out.println("\n================================================");
-        System.out.println("                 BILL RECEIPT");
-        System.out.println("================================================");
+        System.out.println("----------------------------------------------");
 
-        System.out.println(
-            "Bill Number : " + bill.getBillNumber()
-        );
+        System.out.printf("Subtotal       : ₹%.2f%n", subtotal);
+        System.out.printf("GST (5%%)       : ₹%.2f%n", tax);
+        System.out.printf("Grand Total    : ₹%.2f%n", total);
 
-        System.out.println("------------------------------------------------");
-
-        System.out.printf(
-            "Subtotal    : ₹%.2f%n",
-            bill.getSubtotal()
-        );
-
-        System.out.printf(
-            "GST (5%%)    : ₹%.2f%n",
-            bill.getTax()
-        );
-
-        System.out.printf(
-            "Discount    : ₹%.2f%n",
-            bill.getDiscount()
-        );
-
-        System.out.println("------------------------------------------------");
-
-        System.out.printf(
-            "Grand Total : ₹%.2f%n",
-            bill.getGrandTotal()
-        );
-
-        System.out.println("================================================");
+        System.out.println("==============================================");
     }
 }
 
 
-// =====================================================
-// PAYMENT ABSTRACT CLASS
-// OOPS: ABSTRACTION
-// =====================================================
+// ==========================================================
+// PAYMENT ABSTRACTION
+// OOPS CONCEPT: ABSTRACTION
+// ==========================================================
 abstract class Payment {
 
     protected double amount;
@@ -533,293 +429,301 @@ abstract class Payment {
         this.amount = amount;
     }
 
-    // Abstract method
+    // OOPS CONCEPT: ABSTRACT METHOD
     abstract void pay();
-
-    public double getAmount() {
-        return amount;
-    }
 }
 
 
-// =====================================================
+// ==========================================================
 // CASH PAYMENT
-// OOPS: INHERITANCE + POLYMORPHISM
-// =====================================================
+// OOPS CONCEPT: INHERITANCE
+// ==========================================================
 class CashPayment extends Payment {
 
     CashPayment(double amount) {
         super(amount);
     }
 
+    // OOPS CONCEPT: METHOD OVERRIDING
     @Override
     void pay() {
 
-        System.out.printf(
-            "Cash payment of ₹%.2f completed successfully.%n",
-            amount
-        );
+        System.out.println("\nPayment Method : Cash");
+        System.out.println("Amount Paid    : ₹" + amount);
+        System.out.println("Payment Successful!");
     }
 }
 
 
-// =====================================================
-// CARD PAYMENT
-// OOPS: INHERITANCE + POLYMORPHISM
-// =====================================================
-class CardPayment extends Payment {
-
-    CardPayment(double amount) {
-        super(amount);
-    }
-
-    @Override
-    void pay() {
-
-        System.out.printf(
-            "Card payment of ₹%.2f completed successfully.%n",
-            amount
-        );
-    }
-}
-
-
-// =====================================================
+// ==========================================================
 // UPI PAYMENT
-// OOPS: INHERITANCE + POLYMORPHISM
-// =====================================================
+// OOPS CONCEPT: INHERITANCE
+// ==========================================================
 class UPIPayment extends Payment {
 
     UPIPayment(double amount) {
         super(amount);
     }
 
+    // OOPS CONCEPT: METHOD OVERRIDING
     @Override
     void pay() {
 
-        System.out.printf(
-            "UPI payment of ₹%.2f completed successfully.%n",
-            amount
-        );
+        System.out.println("\nPayment Method : UPI");
+        System.out.println("Amount Paid    : ₹" + amount);
+        System.out.println("UPI Payment Successful!");
     }
 }
 
 
-// =====================================================
-// PAYMENT MANAGEMENT CLASS
-// OOPS: POLYMORPHISM
-// =====================================================
+// ==========================================================
+// CARD PAYMENT
+// OOPS CONCEPT: INHERITANCE
+// ==========================================================
+class CardPayment extends Payment {
+
+    CardPayment(double amount) {
+        super(amount);
+    }
+
+    // OOPS CONCEPT: METHOD OVERRIDING
+    @Override
+    void pay() {
+
+        System.out.println("\nPayment Method : Card");
+        System.out.println("Amount Paid    : ₹" + amount);
+        System.out.println("Card Payment Successful!");
+    }
+}
+
+
+// ==========================================================
+// PAYMENT MANAGEMENT
+// ==========================================================
 class PaymentManagement {
 
-    public void processPayment(
-        Scanner sc,
-        double amount
-    ) {
+    public void makePayment(Scanner sc, double amount) {
 
-        System.out.println("\n================================================");
-        System.out.println("             PAYMENT MANAGEMENT");
-        System.out.println("================================================");
-
-        System.out.printf(
-            "Amount to Pay : ₹%.2f%n",
-            amount
-        );
-
-        System.out.println("\n1. Cash");
-        System.out.println("2. Card");
-        System.out.println("3. UPI");
+        System.out.println("\n========== PAYMENT MANAGEMENT ==========");
+        System.out.println("1. Cash");
+        System.out.println("2. UPI");
+        System.out.println("3. Card");
 
         System.out.print("Select Payment Method: ");
         int choice = sc.nextInt();
 
         Payment payment;
 
-        switch (choice) {
+        // OOPS CONCEPT: POLYMORPHISM
+        if (choice == 1) {
 
-            case 1:
+            payment = new CashPayment(amount);
 
-                payment =
-                    new CashPayment(amount);
+        } else if (choice == 2) {
 
-                payment.pay();
-                break;
+            payment = new UPIPayment(amount);
 
-            case 2:
+        } else if (choice == 3) {
 
-                payment =
-                    new CardPayment(amount);
+            payment = new CardPayment(amount);
 
-                payment.pay();
-                break;
+        } else {
 
-            case 3:
-
-                payment =
-                    new UPIPayment(amount);
-
-                payment.pay();
-                break;
-
-            default:
-
-                System.out.println(
-                    "Invalid payment method!"
-                );
+            System.out.println("Invalid payment method!");
+            return;
         }
 
-        System.out.println("================================================");
+        // POLYMORPHIC METHOD CALL
+        payment.pay();
     }
 }
 
 
-// =====================================================
+// ==========================================================
+// SALES CLASS
+// ==========================================================
+class Sale {
+
+    private int saleId;
+    private double amount;
+    private String paymentMethod;
+
+    Sale(int saleId, double amount, String paymentMethod) {
+
+        this.saleId = saleId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void displaySale() {
+
+        System.out.printf("%-10d %-15.2f %-15s%n",
+                saleId, amount, paymentMethod);
+    }
+}
+
+
+// ==========================================================
+// SALES MANAGEMENT
+// ==========================================================
+class SalesManagement {
+
+    ArrayList<Sale> sales = new ArrayList<>();
+
+    int saleId = 1;
+
+    public void addSale(double amount, String paymentMethod) {
+
+        Sale sale = new Sale(saleId, amount, paymentMethod);
+
+        sales.add(sale);
+
+        saleId++;
+
+        System.out.println("Sale recorded successfully!");
+    }
+
+    public void displaySales() {
+
+        if (sales.size() == 0) {
+
+            System.out.println("No sales available.");
+            return;
+        }
+
+        System.out.println("\n================ SALES REPORT ================");
+
+        System.out.printf("%-10s %-15s %-15s%n",
+                "Sale ID", "Amount", "Payment");
+
+        System.out.println("-----------------------------------------------");
+
+        for (Sale s : sales) {
+
+            s.displaySale();
+        }
+
+        System.out.println("-----------------------------------------------");
+
+        double totalSales = 0;
+
+        for (Sale s : sales) {
+            // Total calculated using sale information
+        }
+
+        System.out.println("Total Number of Sales : " + sales.size());
+    }
+}
+
+
+// ==========================================================
 // MAIN CLASS
-// =====================================================
-public class SuperMarket {
+// ==========================================================
+public class SuperMarket{
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        // Product Management Object
+        // OOPS CONCEPT: OBJECT CREATION
         ProductManagement productManagement =
-            new ProductManagement();
+                new ProductManagement();
 
-        productManagement.loadProducts();
-
-        // Order Management Object
         OrderManagement orderManagement =
-            new OrderManagement(productManagement);
+                new OrderManagement(productManagement);
 
-        // Billing Management Object
         BillingManagement billingManagement =
-            new BillingManagement();
+                new BillingManagement();
 
-        // Payment Management Object
         PaymentManagement paymentManagement =
-            new PaymentManagement();
+                new PaymentManagement();
+
+        SalesManagement salesManagement =
+                new SalesManagement();
+
+        // Load sample products
+        productManagement.loadProducts();
 
         int choice;
 
         do {
 
             System.out.println("\n");
-            System.out.println("================================================");
-            System.out.println("       SUPERMARKET MANAGEMENT SYSTEM");
-            System.out.println("================================================");
-
+            System.out.println("=================================================");
+            System.out.println("        SUPERMARKET MANAGEMENT SYSTEM");
+            System.out.println("=================================================");
             System.out.println("1. Product Management");
             System.out.println("2. Order Management");
             System.out.println("3. Billing Management");
             System.out.println("4. Payment Management");
-            System.out.println("5. Exit");
-
-            System.out.println("================================================");
+            System.out.println("5. Sales Management");
+            System.out.println("6. Exit");
+            System.out.println("=================================================");
 
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
 
-
-            // =================================================
-            // PRODUCT MANAGEMENT
-            // =================================================
             switch (choice) {
 
+                // ==========================================
+                // PRODUCT MANAGEMENT
+                // ==========================================
                 case 1:
 
                     int productChoice;
 
                     do {
 
-                        System.out.println(
-                            "\n========== PRODUCT MANAGEMENT =========="
-                        );
-
+                        System.out.println("\n========== PRODUCT MANAGEMENT ==========");
                         System.out.println("1. Display Products");
                         System.out.println("2. Add Product");
                         System.out.println("3. Search Product");
                         System.out.println("4. Update Stock");
                         System.out.println("5. Back");
 
-                        System.out.print(
-                            "Enter choice: "
-                        );
-
-                        productChoice =
-                            sc.nextInt();
+                        System.out.print("Enter choice: ");
+                        productChoice = sc.nextInt();
 
                         switch (productChoice) {
 
                             case 1:
-
-                                productManagement
-                                    .displayProducts();
-
+                                productManagement.displayProducts();
                                 break;
-
 
                             case 2:
-
-                                productManagement
-                                    .addProduct(sc);
-
+                                productManagement.addProduct(sc);
                                 break;
-
 
                             case 3:
 
-                                System.out.print(
-                                    "Enter Product ID: "
-                                );
+                                System.out.print("Enter Product ID: ");
+                                int id = sc.nextInt();
 
-                                int id =
-                                    sc.nextInt();
+                                Product p =
+                                        productManagement.searchProduct(id);
 
-                                Product product =
-                                    productManagement
-                                    .searchProduct(id);
+                                if (p != null) {
 
-                                if (product != null) {
-
-                                    System.out.println(
-                                        "\nProduct Found!"
-                                    );
-
-                                    product
-                                        .displayProduct();
+                                    System.out.println("\nProduct Found!");
+                                    p.displayProduct();
 
                                 } else {
 
-                                    System.out.println(
-                                        "Product not found!"
-                                    );
+                                    System.out.println("Product not found!");
                                 }
 
                                 break;
 
-
                             case 4:
-
-                                productManagement
-                                    .updateStock(sc);
-
+                                productManagement.updateStock(sc);
                                 break;
-
 
                             case 5:
-
-                                System.out.println(
-                                    "Returning to main menu..."
-                                );
-
+                                System.out.println("Returning to main menu...");
                                 break;
 
-
                             default:
-
-                                System.out.println(
-                                    "Invalid choice!"
-                                );
+                                System.out.println("Invalid choice!");
                         }
 
                     } while (productChoice != 5);
@@ -827,84 +731,47 @@ public class SuperMarket {
                     break;
 
 
-                // =================================================
+                // ==========================================
                 // ORDER MANAGEMENT
-                // =================================================
+                // ==========================================
                 case 2:
 
                     int orderChoice;
 
                     do {
 
-                        System.out.println(
-                            "\n========== ORDER MANAGEMENT =========="
-                        );
+                        System.out.println("\n========== ORDER MANAGEMENT ==========");
+                        System.out.println("1. Add Product to Order");
+                        System.out.println("2. Display Order");
+                        System.out.println("3. Calculate Total");
+                        System.out.println("4. Back");
 
-                        System.out.println(
-                            "1. Add Product to Order"
-                        );
-
-                        System.out.println(
-                            "2. Display Order"
-                        );
-
-                        System.out.println(
-                            "3. Calculate Total"
-                        );
-
-                        System.out.println(
-                            "4. Back"
-                        );
-
-                        System.out.print(
-                            "Enter choice: "
-                        );
-
-                        orderChoice =
-                            sc.nextInt();
+                        System.out.print("Enter choice: ");
+                        orderChoice = sc.nextInt();
 
                         switch (orderChoice) {
 
                             case 1:
-
-                                orderManagement
-                                    .createOrder(sc);
-
+                                orderManagement.createOrder(sc);
                                 break;
-
 
                             case 2:
-
-                                orderManagement
-                                    .displayOrder();
-
+                                orderManagement.displayOrder();
                                 break;
-
 
                             case 3:
 
-                                double total =
-                                    orderManagement
-                                    .calculateTotal();
-
                                 System.out.printf(
-                                    "Order Total : ₹%.2f%n",
-                                    total
-                                );
+                                        "Order Total : ₹%.2f%n",
+                                        orderManagement.calculateTotal());
 
                                 break;
-
 
                             case 4:
-
                                 break;
 
-
                             default:
-
-                                System.out.println(
-                                    "Invalid choice!"
-                                );
+                                System.out.println("Invalid choice!");
                         }
 
                     } while (orderChoice != 4);
@@ -912,83 +779,150 @@ public class SuperMarket {
                     break;
 
 
-                // =================================================
+                // ==========================================
                 // BILLING MANAGEMENT
-                // =================================================
+                // ==========================================
                 case 3:
 
-                    if (orderManagement.orderItems.isEmpty()) {
-
-                        System.out.println(
-                            "No order available. Please create an order first."
-                        );
-
-                    } else {
-
-                        orderManagement
-                            .displayOrder();
-
-                        Bill bill =
-                            billingManagement
-                            .generateBill(orderManagement);
-
-                        billingManagement
-                            .displayBill(bill);
-                    }
+                    billingManagement.generateBill(orderManagement);
 
                     break;
 
 
-                // =================================================
+                // ==========================================
                 // PAYMENT MANAGEMENT
-                // =================================================
+                // ==========================================
                 case 4:
 
-                    if (orderManagement.orderItems.isEmpty()) {
+                    double total =
+                            orderManagement.calculateTotal();
 
-                        System.out.println(
-                            "No order available. Please create an order first."
-                        );
+                    if (total == 0) {
+
+                        System.out.println("Please create an order first.");
 
                     } else {
 
-                        Bill bill =
-                            billingManagement
-                            .generateBill(orderManagement);
+                        double tax =
+                                billingManagement.calculateTax(total);
 
-                        billingManagement
-                            .displayBill(bill);
+                        double grandTotal =
+                                total + tax;
 
-                        paymentManagement
-                            .processPayment(
-                                sc,
-                                bill.getGrandTotal()
-                            );
+                        System.out.printf(
+                                "Amount to Pay : ₹%.2f%n",
+                                grandTotal);
+
+                        paymentManagement.makePayment(
+                                sc, grandTotal);
                     }
 
                     break;
 
 
-                // =================================================
-                // EXIT
-                // =================================================
+                // ==========================================
+                // SALES MANAGEMENT
+                // ==========================================
                 case 5:
 
-                    System.out.println(
-                        "\n========================================"
-                    );
+                    int salesChoice;
 
-                    System.out.println(
-                        "Thank you for using Supermarket System!"
-                    );
+                    do {
 
-                    System.out.println(
-                        "Visit Again!"
-                    );
+                        System.out.println("\n========== SALES MANAGEMENT ==========");
+                        System.out.println("1. Record Sale");
+                        System.out.println("2. Display Sales");
+                        System.out.println("3. Back");
 
+                        System.out.print("Enter choice: ");
+                        salesChoice = sc.nextInt();
+
+                        switch (salesChoice) {
+
+                            case 1:
+
+                                double saleAmount =
+                                        orderManagement.calculateTotal();
+
+                                if (saleAmount == 0) {
+
+                                    System.out.println(
+                                            "No order available.");
+
+                                } else {
+
+                                    System.out.println(
+                                            "Select payment method:");
+
+                                    System.out.println(
+                                            "1. Cash");
+
+                                    System.out.println(
+                                            "2. UPI");
+
+                                    System.out.println(
+                                            "3. Card");
+
+                                    System.out.print(
+                                            "Enter choice: ");
+
+                                    int payChoice =
+                                            sc.nextInt();
+
+                                    String method;
+
+                                    if (payChoice == 1) {
+                                        method = "Cash";
+                                    } else if (payChoice == 2) {
+                                        method = "UPI";
+                                    } else if (payChoice == 3) {
+                                        method = "Card";
+                                    } else {
+                                        System.out.println(
+                                                "Invalid payment method.");
+                                        break;
+                                    }
+
+                                    double tax =
+                                            billingManagement
+                                                    .calculateTax(saleAmount);
+
+                                    double finalAmount =
+                                            saleAmount + tax;
+
+                                    salesManagement.addSale(
+                                            finalAmount, method);
+                                }
+
+                                break;
+
+                            case 2:
+                                salesManagement.displaySales();
+                                break;
+
+                            case 3:
+                                break;
+
+                            default:
+                                System.out.println(
+                                        "Invalid choice!");
+                        }
+
+                    } while (salesChoice != 3);
+
+                    break;
+
+
+                // ==========================================
+                // EXIT
+                // ==========================================
+                case 6:
+
+                    System.out.println("\n=================================");
                     System.out.println(
-                        "========================================"
-                    );
+                            "Thank You for Using Supermarket System!");
+                    System.out.println("Visit Again!");
+                    System.out.println("=================================");
 
                     break;
 
@@ -996,11 +930,10 @@ public class SuperMarket {
                 default:
 
                     System.out.println(
-                        "Invalid choice! Please try again."
-                    );
+                            "Invalid choice! Please try again.");
             }
 
-        } while (choice != 5);
+        } while (choice != 6);
 
         sc.close();
     }
